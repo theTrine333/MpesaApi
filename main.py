@@ -30,7 +30,7 @@ def stk_push(phone_number: str, amount: int):
     token = get_access_token()
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     business_short_code = "174379"  # Replace with your shortcode
-    passkey = "your_passkey_here"  # Replace with your Lipa na M-Pesa passkey
+    passkey = "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMjQxMTI0MDMyNDU1"  # Replace with your Lipa na M-Pesa passkey
     password = base64.b64encode(f"{business_short_code}{passkey}{timestamp}".encode()).decode()
 
     payload = {
@@ -42,7 +42,7 @@ def stk_push(phone_number: str, amount: int):
         "PartyA": phone_number,
         "PartyB": business_short_code,
         "PhoneNumber": phone_number,
-        "CallBackURL": "https://127.0.0.1/callback",  # Replace with your actual callback URL
+        "CallBackURL": "https://super-fairly-anteater.ngrok-free.app",  # Replace with your actual callback URL
         "AccountReference": "Test",
         "TransactionDesc": "Payment"
     }
@@ -55,12 +55,12 @@ def stk_push(phone_number: str, amount: int):
         return response.json()
     raise HTTPException(status_code=response.status_code, detail=response.text)
 
-@app.get("/callback")
-def handle_failed():
-    return {
-        "status_code":505,
-        "message":"Couldn't process data at the moment"
-    }
+@app.post("/callback")
+async def handle_callback(request: str):
+    data = await request.json()
+    # Process the callback data (e.g., log it or save it to a database)
+    print("Callback received:", data)
+    return {"message": "Callback processed successfully"}
 
 @app.get("/")
 def read_root():
